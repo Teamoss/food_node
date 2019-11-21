@@ -31,6 +31,7 @@ app.use(bodyParser.json())
 //挂载路由
 app.use('/api', require('./routers/api'));
 app.use('/api', require('./routers/login'));
+app.use('/api', require('./routers/register'));
 
 //连接数据库
 mongoose.connect('mongodb://localhost/food', { useNewUrlParser: true },function(err) {

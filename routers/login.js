@@ -8,13 +8,12 @@ const resData = {}
 //商家登录
 router.post('/login', (req, res, next) => {
 
-    //获取用户提交过来登录信息
     let username = req.body.username
     let password = req.body.password
 
     if (username === '') {
         resData.code = 2001
-        resData.message = '用户名不能为空'
+        resData.message = '账号不能为空'
         res.json(resData)
         return
     }

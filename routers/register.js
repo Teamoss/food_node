@@ -24,7 +24,7 @@ router.post('/register', (req, res, next) => {
         return
     }
 
-    //判断商家是否已被注册
+    //判断账号是否已被注册
     Business.findOne({
         username: username
     }).then(userInfo => {

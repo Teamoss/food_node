@@ -34,6 +34,9 @@ router.post('/login', (req, res, next) => {
             res.json(resData)
             return
         }
+        //用户存在则设置session记录登录状态
+        // req.session.userInfo = userInfo
+
         resData.code = 2000
         resData.message = '登录成功'
         resData.userInfo = {

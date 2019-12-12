@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 //导入表模型
-const User = require('../models/User')
+// const User = require('../models/User')
 const Category = require('../models/category')
 const Content = require('../models/Content')
 
@@ -24,74 +24,74 @@ router.get('/', function (req, res, next) {
 })
 
 //渲染用户管理页面
-router.get('/user', function (req, res, next) {
-
-    //通过session判断用户是否为管理员
-    if (!req.session.userInfo) {
-        res.render('./404.html')
-        return
-    }
-    if (!req.session.userInfo.isAdmin) {
-        res.render('./404.html')
-        return
-    }
-
-    var page = Number(req.query.page || 1)  //获取用户传递过来页数
-    var limit = 10  //每页显示10条数据
-    var pages = 0   //总页数
-
-    //获取用户总条数
-    User.countDocuments().then(count => {
-
-        //获取总页数
-        pages = Math.ceil(count / limit)
-        //最大页码不能超过总页数
-        page = Math.min(page, pages)
-        //最小页码不能小于1
-        page = Math.max(page, 1)
-        //越过数据库条数
-        var skip = (page - 1) * limit
-
-        //查询数据库降序排序 sort({_id:-1})
-        User.find().sort({_id: -1}).limit(limit).skip(skip).then(userList => {
-            res.render('./admin/user_index.html', {
-                userInfo: req.session.userInfo,
-                userList: userList,
-                count: count,
-                pages: pages,
-                limit: limit,
-                page: page
-            })
-        })
-    })
-
-})
-
-//删除用户
-router.get('/user/delete', function (req, res, next) {
-
-    //获取需要删除用户ID
-    var id = req.query.id
-
-    User.deleteOne({
-        _id: id
-    }).then(removeSuccess => {
-        //删除失败
-        if (!removeSuccess) {
-            res.render('./admin/submitError.html', {
-                userInfo: req.session.userInfo,
-                message: '删除失败'
-            })
-            return
-        }
-        //删除成功
-        res.render('./admin/submitSuccess.html', {
-            userInfo: req.session.userInfo,
-            message: '删除成功',
-            url: '/admin/user'
-        })
-    })
-})
+// router.get('/user', function (req, res, next) {
+//
+//     //通过session判断用户是否为管理员
+//     if (!req.session.userInfo) {
+//         res.render('./404.html')
+//         return
+//     }
+//     if (!req.session.userInfo.isAdmin) {
+//         res.render('./404.html')
+//         return
+//     }
+//
+//     var page = Number(req.query.page || 1)  //获取用户传递过来页数
+//     var limit = 10  //每页显示10条数据
+//     var pages = 0   //总页数
+//
+//     //获取用户总条数
+//     User.countDocuments().then(count => {
+//
+//         //获取总页数
+//         pages = Math.ceil(count / limit)
+//         //最大页码不能超过总页数
+//         page = Math.min(page, pages)
+//         //最小页码不能小于1
+//         page = Math.max(page, 1)
+//         //越过数据库条数
+//         var skip = (page - 1) * limit
+//
+//         //查询数据库降序排序 sort({_id:-1})
+//         User.find().sort({_id: -1}).limit(limit).skip(skip).then(userList => {
+//             res.render('./admin/user_index.html', {
+//                 userInfo: req.session.userInfo,
+//                 userList: userList,
+//                 count: count,
+//                 pages: pages,
+//                 limit: limit,
+//                 page: page
+//             })
+//         })
+//     })
+//
+// })
+//
+// //删除用户
+// router.get('/user/delete', function (req, res, next) {
+//
+//     //获取需要删除用户ID
+//     var id = req.query.id
+//
+//     User.deleteOne({
+//         _id: id
+//     }).then(removeSuccess => {
+//         //删除失败
+//         if (!removeSuccess) {
+//             res.render('./admin/submitError.html', {
+//                 userInfo: req.session.userInfo,
+//                 message: '删除失败'
+//             })
+//             return
+//         }
+//         //删除成功
+//         res.render('./admin/submitSuccess.html', {
+//             userInfo: req.session.userInfo,
+//             message: '删除成功',
+//             url: '/admin/user'
+//         })
+//     })
+// })
 
 //渲染分类管理页面
 router.get('/category', function (req, res, next) {

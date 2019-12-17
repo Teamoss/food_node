@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const businessSchema = require('../schemas/business')
+const business = require('../schemas/business')
 
 //导出商家表模型
-module.exports = mongoose.model('Business',businessSchema)
+module.exports = mongoose.model('Business',business)

@@ -12,18 +12,19 @@ const session = require('express-session')
 //创建app应用
 const app = express()
 
-//允许跨域
-app.all('*', function (req, res, next) {
+//设置跨域
+app.all('*',function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    res.header('Access-Control-Allow-Methods', '*');
-    res.header('Content-Type', 'application/json;charset=utf-8');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
+    res.header('Access-Control-Allow-Methods','*');
+    res.header("Access-Control-Allow-Credentials","true");
     next();
 });
 
 //配置静态托管文件
-app.use('/node_modules/',express.static(path.join(__dirname,'./node_modules/')))
-app.use('/public/',express.static(path.join(__dirname, './public/')))
+// app.use('/node_modules/',express.static(path.join(__dirname,'./node_modules/')))
+app.use('/public/',express.static(path.join(__dirname, '/public/')))
+
 
 //配置表单post请求 parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -40,7 +41,9 @@ app.use(session({
 app.use('/api', require('./routers/api'));
 app.use('/api', require('./routers/login'));
 app.use('/api', require('./routers/register'));
-app.use('/api', require('./routers/businessMessage'));
+app.use('/api', require('./routers/business'));
+app.use('/api', require('./routers/food'));
+
 
 //连接数据库
 mongoose.connect('mongodb://localhost/food', { useNewUrlParser: true },function(err) {

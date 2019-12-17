@@ -15,12 +15,12 @@ module.exports = new mongoose.Schema({
     //商家名称
     business:{
         type:String,
-        default: '暂无名称'
+        default: '暂无名字，取个名字吧'
     },
     //商家介绍
     content:{
         type:String,
-        default: '暂无介绍'
+        default: '赶快来介绍下你的店铺'
     },
     //商家地址
     address: {

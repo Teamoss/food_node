@@ -1,3 +1,3 @@
-let host = 'localhost:5000'
+let host = 'http://localhost:5000'
 
 module.exports = host

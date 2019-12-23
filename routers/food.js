@@ -14,11 +14,19 @@ router.post('/findAllFood', (req, res, next) => {
     let business = data ? data.business.toString() : null
     let pageSize = data.pageSize
     let pageNo = data.pageNo
+    if (!pageSize || !pageNo) {
+        resData.code = 2001
+        resData.message = '服务器出小差了，请稍后重试~~~'
+        res.json(resData)
+        return
+    }
+    //越过数据库条数
+    let skip = (pageNo - 1) * pageSize
     if (business) {
         //降序排序sort
         Food.find({
             business
-        }).sort({_id: -1}).then(foodData => {
+        }).sort({_id: -1}).limit(pageSize).skip(skip).then(foodData => {
             if (!foodData) {
                 resData.code = 2001
                 resData.message = '服务器出小差了，请稍后重试~~~'
@@ -41,44 +49,42 @@ router.post('/findAllFood', (req, res, next) => {
         resData.message = '查询出错，请重试登录~~'
         res.json(resData)
     }
-
 })
 
 //编辑菜单
-// router.post('/editBusinessMessage', (req, res, next) => {
-//
-//     let data = req.body
-//     let id = data.userID
-//     let logo = data.imageUrl
-//     let business = data.form.name
-//     let content = data.form.message
-//     let address = data.addressMess
-//
-//     if(!business || !logo || !content || !address){
-//         resData.code = 2001
-//         resData.message = '请填写完整信息'
-//         res.json(resData)
-//         return
-//     }
-//     Business.update({
-//         _id: id
-//     }, {
-//         logo,
-//         business,
-//         content,
-//         address
-//     }).then(updateSuccess => {
-//         if (!updateSuccess) {
-//             resData.code = 2001
-//             resData.message = '更新失败'
-//             res.json(resData)
-//             return
-//         }
-//         resData.code = 2000
-//         resData.message = '更新成功'
-//         res.json(resData)
-//     })
-// })
+router.post('/editFood', (req, res, next) => {
+
+    let data = req.body.form
+    let name = data.name
+    let description = data.description
+    let imageUrl = req.body.imageUrl
+    let price = data.price
+    let _id = data._id
+    if (!name || !description || !imageUrl || !price) {
+        resData.code = 2001
+        resData.message = '请填写完整信息'
+        res.json(resData)
+        return
+    }
+    Food.update({
+        _id
+    }, {
+        name,
+        description,
+        imageUrl,
+        price
+    }).then(updateSuccess => {
+        if (!updateSuccess) {
+            resData.code = 2001
+            resData.message = '更新失败'
+            res.json(resData)
+            return
+        }
+        resData.code = 2000
+        resData.message = '更新成功'
+        res.json(resData)
+    })
+})
 
 //删除菜单
 router.post('/deleteFood', function (req, res, next) {
@@ -117,7 +123,14 @@ router.post('/addFood', function (req, res, next) {
         res.json(resData)
         return
     }
-    //数据存储
+
+    if (!business) {
+        resData.code = 2001
+        resData.message = '服务器出错，请重新登录~~~~~~'
+        res.json(resData)
+        return
+    }
+
     new Food({
         business,
         name,

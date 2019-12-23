@@ -22,7 +22,7 @@ app.all('*',function (req, res, next) {
 });
 
 //配置静态托管文件
-// app.use('/node_modules/',express.static(path.join(__dirname,'./node_modules/')))
+app.use('/node_modules/',express.static(path.join(__dirname,'./node_modules/')))
 app.use('/public/',express.static(path.join(__dirname, '/public/')))
 
 
@@ -38,11 +38,12 @@ app.use(session({
 }))
 
 //挂载路由
-app.use('/api', require('./routers/api'));
 app.use('/api', require('./routers/login'));
 app.use('/api', require('./routers/register'));
 app.use('/api', require('./routers/business'));
 app.use('/api', require('./routers/food'));
+app.use('/api', require('./routers/user'));
+
 
 
 //连接数据库

@@ -8,7 +8,7 @@ const host = require('../config/host')
 //定义统一返回格式
 const resData = {}
 
-//查询所有菜单
+//查询店铺所有菜单
 router.post('/findAllFood', (req, res, next) => {
     let data = req.body
     let business = data ? data.business.toString() : null
@@ -161,7 +161,8 @@ router.post('/uploadFood', (req, res, next) => {
     //处理图片
     form.parse(req, function (err, fields, files) {
         let path = files.file.path.split('food_node')[1]
-        let url = host + path
+        let formPath = path.replace(/\\/g,'/')
+        let url = host + formPath
         resData.code = 2000
         resData.message = '上传成功'
         resData.imageUrl = url

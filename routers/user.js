@@ -9,6 +9,7 @@ const resData = {}
 router.post('/userLogin', (req, res, next) => {
 
     let openid = req.body.openid
+
     User.findOne({
         openid,
     }).then(userInfo => {

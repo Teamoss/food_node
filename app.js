@@ -43,7 +43,7 @@ app.use('/api', require('./routers/register'));
 app.use('/api', require('./routers/business'));
 app.use('/api', require('./routers/food'));
 app.use('/api', require('./routers/user'));
-
+app.use('/api', require('./routers/address'));
 
 
 //连接数据库

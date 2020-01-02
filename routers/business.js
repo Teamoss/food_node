@@ -63,6 +63,7 @@ router.post('/editBusinessMessage', (req, res, next) => {
     let data = req.body
     let id = data.userID
     let logo = data.imageUrl
+    let swiper = data.swiper
     let business = data.form.name
     let content = data.form.message
     let address = data.addressMess
@@ -77,6 +78,7 @@ router.post('/editBusinessMessage', (req, res, next) => {
         _id: id
     }, {
         logo,
+        swiper,
         business,
         content,
         address
@@ -102,11 +104,29 @@ router.post('/uploadLogo', (req, res, next) => {
     //处理图片
     form.parse(req, function (err, fields, files) {
         let path = files.file.path.split('food_node')[1]
-        let formPath = path.replace(/\\/g,'/')
+        let formPath = path.replace(/\\/g, '/')
         let url = host + formPath
         resData.code = 2000
         resData.message = '上传成功'
         resData.logo = url
+        res.json(resData)
+    })
+})
+
+//上传商家图片
+router.post('/uploadSwiper', (req, res, next) => {
+    let form = new formidable.IncomingForm();
+    form.encoding = 'utf-8';
+    form.uploadDir = path.join(__dirname, '../public/swiper');
+    form.keepExtensions = true; //保留后缀
+    //处理图片
+    form.parse(req, function (err, fields, files) {
+        let path = files.file.path.split('food_node')[1]
+        let formPath = path.replace(/\\/g, '/')
+        let url = host + formPath
+        resData.code = 2000
+        resData.message = '上传成功'
+        resData.swiper = url
         res.json(resData)
     })
 })

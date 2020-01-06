@@ -138,14 +138,14 @@ router.post('/addFood', function (req, res, next) {
         price,
         imageUrl
     }).save().then(isSaveSuccess => {
-        //数据存储失败
+
         if (!isSaveSuccess) {
             resData.code = 2001
             resData.message = '服务器出差了，请重试'
             res.json(resData)
             return
         }
-        //数据存储成功
+
         resData.code = 2000
         resData.message = '添加成功'
         res.json(resData)

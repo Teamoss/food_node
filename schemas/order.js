@@ -11,12 +11,6 @@ module.exports = new mongoose.Schema({
         ref: 'Business'
     },
 
-    //商家名称
-    businessName: String,
-
-    //商家logo
-    logo: String,
-
     //用户openid
     openid: String,
 
@@ -32,6 +26,9 @@ module.exports = new mongoose.Schema({
     //期望送达时间
     sendTime: String,
 
+    //订单完成时间
+    finishTime: String,
+
     //联系电话
     phone: String,
 
@@ -46,6 +43,12 @@ module.exports = new mongoose.Schema({
 
     //订单状态  0:商家未接单  1.商家已接单  2:已送达/确认收货
     status: {
+        type: Number,
+        default: 0
+    },
+
+    //订单评论状态 0:客户未评价 1:已评价
+    commentStatus: {
         type: Number,
         default: 0
     }

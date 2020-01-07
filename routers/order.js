@@ -55,21 +55,22 @@ router.post('/findAllBusinessOrder', (req, res, next) => {
 router.post('/changeOrder', (req, res, next) => {
 
     //type: 1 商家接单 2 订单已完成/送达
-    const {id, type} = req.body
+    const {id, type, finishTime} = req.body
 
     Order.update({
         _id: id
     }, {
         status: type,
+        finishTime
     }).then(updateSuccess => {
         if (!updateSuccess) {
             resData.code = 2001
-            resData.message = '接单失败，请稍后重试'
+            resData.message = '服务器繁忙,请稍后重启'
             res.json(resData)
             return
         }
         resData.code = 2000
-        resData.message = '接单成功'
+        resData.message = 'success'
         res.json(resData)
     })
 })

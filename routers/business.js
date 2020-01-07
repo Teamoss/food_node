@@ -61,9 +61,9 @@ router.post('/getBusinessMessage', (req, res, next) => {
 router.post('/editBusinessMessage', (req, res, next) => {
 
     const {userID, imageUrl, swiper,addressMess} = req.body
-    const {name, message} = req.body.form
+    const {name, message, phone} = req.body.form
 
-    if (!userID || !imageUrl || !swiper || !addressMess || !message || !name) {
+    if (!userID || !imageUrl || !swiper || !addressMess || !message || !name || !phone) {
         resData.code = 2001
         resData.message = '请填写完整信息'
         res.json(resData)
@@ -74,6 +74,7 @@ router.post('/editBusinessMessage', (req, res, next) => {
     }, {
         logo: imageUrl,
         swiper,
+        phone,
         business: name,
         content: message,
         address: addressMess

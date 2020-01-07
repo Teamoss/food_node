@@ -14,27 +14,24 @@ module.exports = new mongoose.Schema({
         default: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIAtibsicGaUUAGpGr8yo5G7MibcxgUPUreak1h1MAlp2quibB9qXxuruTdVnepiavDz8Tu9OIruLHMb7A/132'
     },
     //商家名称
-    business: {
-        type: String,
-        default: '该商家没有留下名字'
-    },
+    business: String,
+
     //商家介绍
-    content: {
-        type: String,
-        default: '赶快来介绍下你的店铺'
-    },
+    content: String,
+
     //商家地址
-    address: {
-        type: String,
-        default: '该商家没有留下地址'
-    },
+    address: String,
+
+    //联系方式
+    phone: Number,
+
     //评分
     score: {
         type: Number,
         default: randomNumber
     },
     //门店图片
-    swiper:{
+    swiper: {
         type: String,
         default: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIAtibsicGaUUAGpGr8yo5G7MibcxgUPUreak1h1MAlp2quibB9qXxuruTdVnepiavDz8Tu9OIruLHMb7A/132'
     },

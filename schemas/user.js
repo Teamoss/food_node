@@ -9,9 +9,6 @@ module.exports = new mongoose.Schema({
     //用户昵称
     nickName: String,
 
-    //用户姓名
-    name: String,
-
     //用户头像
     avatarUrl: String,
 
@@ -24,9 +21,5 @@ module.exports = new mongoose.Schema({
     //用户省份
     province: String,
 
-    //收货地址
-    address: String,
 
-    //用户手机号
-    phone: Number
 })

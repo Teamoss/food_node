@@ -30,12 +30,14 @@ app.use('/public/',express.static(path.join(__dirname, '/public/')))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+
 //配置session
 app.use(session({
     secret: 'wonderful',
     resave: false,
     saveUninitialized: false
 }))
+
 
 //挂载路由
 app.use('/api', require('./routers/login'));
@@ -45,6 +47,7 @@ app.use('/api', require('./routers/food'));
 app.use('/api', require('./routers/user'));
 app.use('/api', require('./routers/address'));
 app.use('/api', require('./routers/order'));
+app.use('/api', require('./routers/comment'));
 
 
 //连接数据库

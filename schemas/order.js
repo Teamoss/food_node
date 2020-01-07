@@ -6,10 +6,16 @@ module.exports = new mongoose.Schema({
     //关联字段-商家ID
     business: {
         //类型
-        type:mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         //引用
         ref: 'Business'
     },
+
+    //商家名称
+    businessName: String,
+
+    //商家logo
+    logo: String,
 
     //用户openid
     openid: String,
@@ -21,27 +27,27 @@ module.exports = new mongoose.Schema({
     address: String,
 
     //下单时间
-    orderTime:String,
+    orderTime: String,
 
     //期望送达时间
-    sendTime:String,
+    sendTime: String,
 
     //联系电话
-    phone:String,
+    phone: String,
 
     //性别  0女性 1男性
     gender: Number,
 
     //订单信息
-    food:String,
+    food: String,
 
     //订单金额
-    sumMoney:Number,
+    sumMoney: Number,
 
     //订单状态  0:商家未接单  1.商家已接单  2:已送达/确认收货
-    status:{
+    status: {
         type: Number,
-        default:0
+        default: 0
     }
 
 })

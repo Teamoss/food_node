@@ -8,8 +8,7 @@ const resData = {}
 //商家注册
 router.post('/register', (req, res, next) => {
 
-    let username = req.body.username
-    let password = req.body.password
+    const {username,password} = req.body
 
     if (username === '') {
         resData.code = 2001
@@ -26,7 +25,7 @@ router.post('/register', (req, res, next) => {
 
     //判断账号是否已被注册
     Business.findOne({
-        username: username
+        username
     }).then(userInfo => {
         if (userInfo) {
             resData.code = 2001
@@ -35,8 +34,8 @@ router.post('/register', (req, res, next) => {
         }
         //商家未被注册则将数据保存到数据库
         let business = new Business({
-            username: username,
-            password: password
+            username,
+            password
         })
         return business.save()
     }).then(newUserInfo => {

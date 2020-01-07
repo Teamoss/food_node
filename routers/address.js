@@ -8,9 +8,10 @@ const resData = {}
 //获取用户收货地址
 router.post('/getUserAddress', (req, res, next) => {
 
-    let openid = req.body.id.toString()
+    const {id} = req.body
+
     Address.find({
-        openid,
+        openid: id,
     }).sort({_id: -1}).then(address => {
         if (!address) {
             resData.code = 2000
@@ -29,12 +30,8 @@ router.post('/getUserAddress', (req, res, next) => {
 //添加收货地址
 router.post('/addUserAddress', function (req, res, next) {
 
-    let data = req.body
-    let openid = data.openid.toString()
-    let address = data.addr
-    let phone = data.phone
-    let name = data.name
-    let gender = data.gender
+    const {openid, addr, phone, name, gender} = req.body
+
     if (!openid) {
         resData.code = 2001
         resData.message = '服务器出错，请重新登录~~~~~~'
@@ -45,7 +42,7 @@ router.post('/addUserAddress', function (req, res, next) {
     new Address({
         openid,
         name,
-        address,
+        address: addr,
         phone,
         gender
     }).save().then(isSaveSuccess => {
@@ -65,12 +62,7 @@ router.post('/addUserAddress', function (req, res, next) {
 //编辑收货地址
 router.post('/editUserAddress', (req, res, next) => {
 
-    let data = req.body
-    let id = data.id
-    let address = data.address
-    let phone = data.phone
-    let name = data.name
-    let gender = data.gender
+    const {id, address, phone, name, gender} = req.body
 
     Address.update({
         _id: id
@@ -96,10 +88,10 @@ router.post('/editUserAddress', (req, res, next) => {
 //删除收货地址
 router.post('/deleteUserAddress', function (req, res, next) {
 
-    let data = req.body
-    let _id = data.id
+    const {id} = req.body
+
     Address.deleteOne({
-        _id
+        _id: id
     }).then(deleteSuccess => {
         if (!deleteSuccess) {
             resData.code = 2001
@@ -108,7 +100,7 @@ router.post('/deleteUserAddress', function (req, res, next) {
             return
         }
         resData.code = 2000
-        resData.message = '删除成功'    
+        resData.message = '删除成功'
         res.json(resData)
     })
 })

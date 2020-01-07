@@ -10,10 +10,9 @@ const resData = {}
 
 //查询店铺所有菜单
 router.post('/findAllFood', (req, res, next) => {
-    let data = req.body
-    let business = data ? data.business.toString() : null
-    let pageSize = data.pageSize
-    let pageNo = data.pageNo
+
+    const {business, pageSize, pageNo} = req.body
+
     if (!pageSize || !pageNo) {
         resData.code = 2001
         resData.message = '服务器出小差了，请稍后重试~~~'
@@ -54,12 +53,9 @@ router.post('/findAllFood', (req, res, next) => {
 //编辑菜单
 router.post('/editFood', (req, res, next) => {
 
-    let data = req.body.form
-    let name = data.name
-    let description = data.description
-    let imageUrl = req.body.imageUrl
-    let price = data.price
-    let _id = data._id
+    const {imageUrl} = req.body
+    const {name, description, price, _id} = req.body.form
+
     if (!name || !description || !imageUrl || !price) {
         resData.code = 2001
         resData.message = '请填写完整信息'
@@ -89,10 +85,10 @@ router.post('/editFood', (req, res, next) => {
 //删除菜单
 router.post('/deleteFood', function (req, res, next) {
 
-    let data = req.body
-    let _id = data.id
+    const {id} = req.body
+
     Food.deleteOne({
-        _id
+        _id: id
     }).then(deleteSuccess => {
         if (!deleteSuccess) {
             resData.code = 2001
@@ -110,12 +106,8 @@ router.post('/deleteFood', function (req, res, next) {
 //添加菜单
 router.post('/addFood', function (req, res, next) {
 
-    let data = req.body
-    let name = data.form.name
-    let description = data.form.description
-    let price = data.form.price
-    let imageUrl = data.imageUrl
-    let business = data.business.toString()
+    const {imageUrl, business} = req.body
+    const {name, description, price} = req.body.form
 
     if (!name || !description || !price || !imageUrl) {
         resData.code = 2001
@@ -161,7 +153,7 @@ router.post('/uploadFood', (req, res, next) => {
     //处理图片
     form.parse(req, function (err, fields, files) {
         let path = files.file.path.split('food_node')[1]
-        let formPath = path.replace(/\\/g,'/')
+        let formPath = path.replace(/\\/g, '/')
         let url = host + formPath
         resData.code = 2000
         resData.message = '上传成功'

@@ -10,9 +10,9 @@ const resData = {}
 
 //查询所有商家
 router.post('/findAllBusiness', (req, res, next) => {
-    let data = req.body
-    let pageSize = data.pageSize
-    let pageNo = data.pageNo
+
+    const {pageSize, pageNo} = req.body
+
     if (!pageSize || !pageNo) {
         resData.code = 2001
         resData.message = '服务器出小差了，请稍后重试~~~'
@@ -46,9 +46,9 @@ router.post('/findAllBusiness', (req, res, next) => {
 //获取商家信息
 router.post('/getBusinessMessage', (req, res, next) => {
 
-    let _id = req.body.userID
+    const {userID} = req.body
     Business.findOne({
-        _id,
+        _id: userID,
     }).then(userInfo => {
         resData.code = 2000
         resData.message = '登录成功'
@@ -60,28 +60,23 @@ router.post('/getBusinessMessage', (req, res, next) => {
 //编辑商家信息
 router.post('/editBusinessMessage', (req, res, next) => {
 
-    let data = req.body
-    let id = data.userID
-    let logo = data.imageUrl
-    let swiper = data.swiper
-    let business = data.form.name
-    let content = data.form.message
-    let address = data.addressMess
+    const {userID, imageUrl, swiper,addressMess} = req.body
+    const {name, message} = req.body.form
 
-    if (!business || !logo || !content || !address) {
+    if (!userID || !imageUrl || !swiper || !addressMess || !message || !name) {
         resData.code = 2001
         resData.message = '请填写完整信息'
         res.json(resData)
         return
     }
     Business.update({
-        _id: id
+        _id: userID
     }, {
-        logo,
+        logo: imageUrl,
         swiper,
-        business,
-        content,
-        address
+        business: name,
+        content: message,
+        address: addressMess
     }).then(updateSuccess => {
         if (!updateSuccess) {
             resData.code = 2001

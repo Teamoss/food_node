@@ -8,8 +8,7 @@ const resData = {}
 //商家登录
 router.post('/login', (req, res, next) => {
 
-    let username = req.body.username
-    let password = req.body.password
+    const {username, password} = req.body
 
     if (username === '') {
         resData.code = 2001

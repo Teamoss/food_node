@@ -8,7 +8,7 @@ const resData = {}
 //用户登录
 router.post('/userLogin', (req, res, next) => {
 
-    let openid = req.body.openid
+    const {openid} = req.body
 
     User.findOne({
         openid,
@@ -28,13 +28,8 @@ router.post('/userLogin', (req, res, next) => {
 //用户注册
 router.post('/userRegister', (req, res, next) => {
 
-    let data = req.body
-    let openid = data.openid
-    let nickName = data.userInfo.nickName
-    let avatarUrl = data.userInfo.avatarUrl
-    let gender = data.userInfo.gender
-    let city = data.userInfo.city
-    let province = data.userInfo.province
+    const {openid} = req.body
+    const {nickName, avatarUrl, gender, city, province} = req.body.userInfo
 
     let user = new User({
         openid,

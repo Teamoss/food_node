@@ -28,11 +28,25 @@ module.exports = new mongoose.Schema({
     //评分
     score: {
         type: Number,
-        default: randomNumber
+        default: 0
     },
+
+    //销量
+    saleNumber: {
+        type: Number,
+        default: 0
+    },
+
+    //评论数量
+    commentNumber: {
+        type: Number,
+        default: 0
+    },
+
     //门店图片
     swiper: {
         type: String,
         default: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIAtibsicGaUUAGpGr8yo5G7MibcxgUPUreak1h1MAlp2quibB9qXxuruTdVnepiavDz8Tu9OIruLHMb7A/132'
     },
+
 })

@@ -28,9 +28,9 @@ router.post('/getUserAddress', (req, res, next) => {
 })
 
 //添加收货地址
-router.post('/addUserAddress', function (req, res, next) {
+router.post('/addUserAddress', (req, res, next) => {
 
-    const {openid, addr, phone, name, gender} = req.body
+    const {openid, phone, gender, addr, name} = req.body
 
     if (!openid) {
         resData.code = 2001
@@ -38,7 +38,6 @@ router.post('/addUserAddress', function (req, res, next) {
         res.json(resData)
         return
     }
-
     new Address({
         openid,
         name,
@@ -53,10 +52,12 @@ router.post('/addUserAddress', function (req, res, next) {
             res.json(resData)
             return
         }
+
         resData.code = 2000
-        resData.message = '保存成功'
+        resData.message = '添加成功'
         res.json(resData)
     })
+
 })
 
 //编辑收货地址

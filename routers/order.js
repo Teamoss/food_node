@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Order = require('../models/Order')
+const Business = require('../models/Business')
 
 //定义统一返回格式
 const resData = {}
@@ -153,6 +154,20 @@ router.post('/sendOrder', (req, res, next) => {
             res.json(resData)
             return
         }
+
+        //添加商家销量
+        Business.findOne({
+            _id: businessId
+        }).then(businessInfo => {
+            Business.update({
+                _id: businessId
+            }, {
+                saleNumber: businessInfo.saleNumber + 1,
+            }).then(updateSuccess => {
+
+            })
+        })
+
         let obj = {}
         obj['id'] = saveInfo._id
         obj['sumMoney'] = saveInfo.sumMoney

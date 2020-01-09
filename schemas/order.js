@@ -41,13 +41,13 @@ module.exports = new mongoose.Schema({
     //订单金额
     sumMoney: Number,
 
-    //订单状态  0:商家未接单  1.商家已接单  2:已送达/确认收货
+    //订单状态  0:商家未接单  1.商家已接单  2:已送达
     status: {
         type: Number,
         default: 0
     },
 
-    //订单评论状态 0:客户未评价 1:已评价
+    //订单评论状态 0:未评价 1:已评价
     commentStatus: {
         type: Number,
         default: 0

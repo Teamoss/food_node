@@ -36,7 +36,7 @@ module.exports = new mongoose.Schema({
     gender: Number,
 
     //订单信息
-    food: String,
+    food: Array,
 
     //订单金额
     sumMoney: Number,

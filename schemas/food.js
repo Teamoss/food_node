@@ -18,7 +18,7 @@ module.exports = new mongoose.Schema({
         default:'快来介绍下吧~~'
     },
     //菜品价格
-    price:String,
+    price:Number,
     //菜品图片
     imageUrl:{
         type:String,

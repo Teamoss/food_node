@@ -9,46 +9,46 @@ const Business = require('../models/Business')
 const resData = {}
 
 //查询店铺所有评论
-// router.post('/findAllFood', (req, res, next) => {
-//
-//     const {business, pageSize, pageNo} = req.body
-//
-//     if (!pageSize || !pageNo) {
-//         resData.code = 2001
-//         resData.message = '服务器出小差了，请稍后重试~~~'
-//         res.json(resData)
-//         return
-//     }
-//     //越过数据库条数
-//     let skip = (pageNo - 1) * pageSize
-//     if (business) {
-//         //降序排序sort
-//         Food.find({
-//             business
-//         }).sort({_id: -1}).limit(pageSize).skip(skip).then(foodData => {
-//             if (!foodData) {
-//                 resData.code = 2001
-//                 resData.message = '服务器出小差了，请稍后重试~~~'
-//                 res.json(resData)
-//                 return
-//             }
-//             Food.countDocuments({
-//                 business
-//             }).then(count => {
-//                 let total = count
-//                 resData.code = 2000
-//                 resData.message = '查询成功'
-//                 resData.data = foodData
-//                 resData.total = total
-//                 res.json(resData)
-//             })
-//         })
-//     } else {
-//         resData.code = 2001
-//         resData.message = '查询出错，请重试登录~~'
-//         res.json(resData)
-//     }
-// })
+router.post('/findAllComment', (req, res, next) => {
+
+    const {businessId, pageSize, pageNo} = req.body
+
+    if (!pageSize || !pageNo) {
+        resData.code = 2001
+        resData.message = '服务器出小差了，请稍后重试~~~'
+        res.json(resData)
+        return
+    }
+    //越过数据库条数
+    let skip = (pageNo - 1) * pageSize
+
+    //降序排序sort
+    Comment.find({
+        business: businessId
+    }).populate({
+        path: 'order'
+    }).sort({_id: -1}).limit(pageSize).skip(skip).then(commentData => {
+
+        if (!commentData) {
+            resData.code = 2001
+            resData.message = '服务器出小差了，请稍后重试~~~'
+            res.json(resData)
+            return
+        }
+        Comment.countDocuments({
+            business: businessId
+        }).then(count => {
+            let total = count
+            resData.code = 2000
+            resData.message = 'success'
+            resData.data = commentData
+            resData.total = total
+            res.json(resData)
+        })
+
+    })
+
+})
 
 
 //修改评论
@@ -91,7 +91,7 @@ router.post('/editComment', (req, res, next) => {
 })
 
 
-//查找用户评论
+//查看用户评论
 router.post('/findComment', (req, res, next) => {
 
     const {id} = req.body
@@ -118,14 +118,11 @@ router.post('/addComment', function (req, res, next) {
 
     const {score, openid, userInfo, business, order, comment, commentTime} = req.body
 
-    let user = JSON.stringify(userInfo)
-
-
     new Comment({
         business,
         order,
         openid,
-        userInfo: user,
+        userInfo,
         comment,
         commentTime,
         score

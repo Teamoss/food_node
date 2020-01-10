@@ -127,7 +127,6 @@ router.post('/sendOrder', (req, res, next) => {
 
     const {businessId, orderList, orderTime, time, sumMoney} = req.body
     const {openid, name, address, phone, gender} = req.body.address
-    let food = JSON.stringify(orderList)
 
     if (!openid || !businessId) {
         resData.code = 2001
@@ -142,7 +141,7 @@ router.post('/sendOrder', (req, res, next) => {
         address,
         phone,
         gender,
-        food,
+        food:orderList,
         orderTime,
         sendTime: time,
         sumMoney,

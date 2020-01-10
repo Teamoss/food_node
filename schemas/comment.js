@@ -23,7 +23,7 @@ module.exports = new mongoose.Schema({
     openid: String,
 
     //用户信息
-    userInfo: String,
+    userInfo: Object,
 
     //评论内容
     comment:String,

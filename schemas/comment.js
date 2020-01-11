@@ -6,7 +6,7 @@ module.exports = new mongoose.Schema({
     //关联字段-商家ID
     business: {
         //类型
-        type:mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         //引用
         ref: 'Business'
     },
@@ -14,7 +14,7 @@ module.exports = new mongoose.Schema({
     //关联字段-订单ID
     order: {
         //类型
-        type:mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         //引用
         ref: 'Order'
     },
@@ -26,13 +26,20 @@ module.exports = new mongoose.Schema({
     userInfo: Object,
 
     //评论内容
-    comment:String,
+    comment: String,
 
     //评论时间
-    commentTime:String,
+    commentTime: String,
 
     //评分
-    score:Number
+    score: Number,
+
+    //商家回复
+    businessComment: {
+        //类型
+        type: String,
+        default: null
+    },
 
 })
 

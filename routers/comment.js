@@ -50,8 +50,33 @@ router.post('/findAllComment', (req, res, next) => {
 
 })
 
+//商家回复
+router.post('/businessComment', (req, res, next) => {
 
-//修改评论
+    const {id,comment} = req.body
+
+    Comment.update({
+        _id: id
+    }, {
+        businessComment:comment
+    }).then(commentSuccess => {
+
+        if (!commentSuccess) {
+            resData.code = 2001
+            resData.message = '回复失败，请重试'
+            res.json(resData)
+            return
+        }
+        resData.code = 2000
+        resData.message = '回复成功'
+        resData.data = commentSuccess
+        res.json(resData)
+    })
+
+})
+
+
+//顾客修改评论
 router.post('/editComment', (req, res, next) => {
 
     const {score, oldscore, commentId, comment, commentTime, business} = req.body

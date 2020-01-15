@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-//用户用户评论表结构
+//用户评论表结构
 module.exports = new mongoose.Schema({
 
     //关联字段-商家ID

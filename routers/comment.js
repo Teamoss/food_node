@@ -3,6 +3,7 @@ const router = express.Router()
 const Comment = require('../models/Comment')
 const Order = require('../models/Order')
 const Business = require('../models/Business')
+const host = require('../config/host')
 
 
 //定义统一返回格式
@@ -35,6 +36,13 @@ router.post('/findAllComment', (req, res, next) => {
             res.json(resData)
             return
         }
+
+        commentData && commentData.length > 0 && commentData.forEach((item, index) => {
+            item.order.food.forEach(item=>{
+                item['imageUrl'] = host + item.imageUrl
+            })
+        })
+
         Comment.countDocuments({
             business: businessId
         }).then(count => {
@@ -53,12 +61,12 @@ router.post('/findAllComment', (req, res, next) => {
 //商家回复
 router.post('/businessComment', (req, res, next) => {
 
-    const {id,comment} = req.body
+    const {id, comment} = req.body
 
     Comment.update({
         _id: id
     }, {
-        businessComment:comment
+        businessComment: comment
     }).then(commentSuccess => {
 
         if (!commentSuccess) {

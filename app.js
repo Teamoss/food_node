@@ -48,6 +48,8 @@ app.use('/api', require('./routers/user'));
 app.use('/api', require('./routers/address'));
 app.use('/api', require('./routers/order'));
 app.use('/api', require('./routers/comment'));
+app.use('/api', require('./routers/collection'));
+
 
 
 //连接数据库

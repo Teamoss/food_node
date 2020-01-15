@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const Order = require('../models/Order')
 const Business = require('../models/Business')
+const host = require('../config/host')
 
 //定义统一返回格式
 const resData = {}
@@ -32,6 +33,11 @@ router.post('/findAllBusinessOrder', (req, res, next) => {
                 res.json(resData)
                 return
             }
+            orderData && orderData.forEach(item => {
+                item.food && item.food.forEach(i => {
+                    i['imageUrl'] = host + i.imageUrl
+                })
+            })
 
             Order.countDocuments({
                 business,
@@ -102,7 +108,15 @@ router.post('/findAllOrder', (req, res, next) => {
                 res.json(resData)
                 return
             }
-
+            orderData && orderData.forEach((item, index) => {
+                if (index === 0) {
+                    item.business['logo'] = host + item.business.logo
+                    item.business['swiper'] = host + item.business.swiper
+                }
+                item.food && item.food.forEach(i => {
+                    i['imageUrl'] = host + i.imageUrl
+                })
+            })
             Order.countDocuments({
                 openid
             }).then(count => {
@@ -134,6 +148,13 @@ router.post('/sendOrder', (req, res, next) => {
         res.json(resData)
         return
     }
+
+    orderList && orderList.forEach(item => {
+        let url = item.imageUrl.split('/public')[1]
+        let foodUrl = `/public${url}`
+        item['imageUrl'] = foodUrl
+    })
+
     new Order({
         business: businessId,
         openid,
@@ -141,7 +162,7 @@ router.post('/sendOrder', (req, res, next) => {
         address,
         phone,
         gender,
-        food:orderList,
+        food: orderList,
         orderTime,
         sendTime: time,
         sumMoney,

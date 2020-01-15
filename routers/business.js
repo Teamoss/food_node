@@ -8,10 +8,10 @@ const host = require('../config/host')
 //定义统一返回格式
 const resData = {}
 
-//查询所有商家
-router.post('/findAllBusiness', (req, res, next) => {
+//搜素商家
+router.post('/searchBusiness', (req, res, next) => {
 
-    const {pageSize, pageNo} = req.body
+    const {pageSize, pageNo, key} = req.body
 
     if (!pageSize || !pageNo) {
         resData.code = 2001
@@ -22,14 +22,20 @@ router.post('/findAllBusiness', (req, res, next) => {
     //越过数据库条数
     let skip = (pageNo - 1) * pageSize
 
-    //降序排序sort
-    Business.find().sort({_id: -1}).limit(pageSize).skip(skip).then(data => {
+    //降序排序sort  模糊查询
+    Business.find({
+        $or: [{'business': {'$regex': key, $options: '$i'}}]
+    }).sort({_id: -1}).limit(pageSize).skip(skip).then(data => {
         if (!data) {
             resData.code = 2001
             resData.message = '服务器出小差了，请稍后重试~~~'
             res.json(resData)
             return
         }
+        data && data.forEach(item=>{
+            item['logo'] = host + item.logo
+            item['swiper'] = host + item.swiper
+        })
         Business.countDocuments().then(count => {
             let total = count
             resData.code = 2000
@@ -42,6 +48,92 @@ router.post('/findAllBusiness', (req, res, next) => {
 
 })
 
+//查询所有商家
+router.post('/findAllBusiness', (req, res, next) => {
+
+    const {pageSize, pageNo, type} = req.body
+
+    if (!pageSize || !pageNo) {
+        resData.code = 2001
+        resData.message = '服务器出小差了，请稍后重试~~~'
+        res.json(resData)
+        return
+    }
+    //越过数据库条数
+    let skip = (pageNo - 1) * pageSize
+
+    //降序排序sort
+    if (type == 1) {
+        Business.find().sort({_id: -1}).limit(pageSize).skip(skip).then(data => {
+            if (!data) {
+                resData.code = 2001
+                resData.message = '服务器出小差了，请稍后重试~~~'
+                res.json(resData)
+                return
+            }
+            data && data.forEach(item=>{
+                item['logo'] = host + item.logo
+                item['swiper'] = host + item.swiper
+            })
+            Business.countDocuments().then(count => {
+                let total = count
+                resData.code = 2000
+                resData.message = '查询成功'
+                resData.data = data
+                resData.total = total
+                res.json(resData)
+            })
+        })
+    }
+    //销量降序排序
+    if (type == 2) {
+        Business.find().sort({saleNumber: -1}).limit(pageSize).skip(skip).then(data => {
+            if (!data) {
+                resData.code = 2001
+                resData.message = '服务器出小差了，请稍后重试~~~'
+                res.json(resData)
+                return
+            }
+            data && data.forEach(item=>{
+                item['logo'] = host + item.logo
+                item['swiper'] = host + item.swiper
+            })
+            Business.countDocuments().then(count => {
+                let total = count
+                resData.code = 2000
+                resData.message = '查询成功'
+                resData.data = data
+                resData.total = total
+                res.json(resData)
+            })
+        })
+    }
+    //好评优先降序排序
+    if (type == 3) {
+        Business.find().sort({score: -1}).limit(pageSize).skip(skip).then(data => {
+            if (!data) {
+                resData.code = 2001
+                resData.message = '服务器出小差了，请稍后重试~~~'
+                res.json(resData)
+                return
+            }
+            data && data.forEach(item=>{
+                item['logo'] = host + item.logo
+                item['swiper'] = host + item.swiper
+            })
+            Business.countDocuments().then(count => {
+                let total = count
+                resData.code = 2000
+                resData.message = '查询成功'
+                resData.data = data
+                resData.total = total
+                res.json(resData)
+            })
+        })
+    }
+
+})
+
 
 //获取商家信息
 router.post('/getBusinessMessage', (req, res, next) => {
@@ -50,6 +142,10 @@ router.post('/getBusinessMessage', (req, res, next) => {
     Business.findOne({
         _id: userID,
     }).then(userInfo => {
+        if(userInfo){
+            userInfo['logo'] = host + userInfo.logo
+            userInfo['swiper'] = host + userInfo.swiper
+        }
         resData.code = 2000
         resData.message = '登录成功'
         resData.userInfo = userInfo
@@ -60,8 +156,13 @@ router.post('/getBusinessMessage', (req, res, next) => {
 //编辑商家信息
 router.post('/editBusinessMessage', (req, res, next) => {
 
-    const {userID, imageUrl, swiper,addressMess} = req.body
+    const {userID, imageUrl, swiper, addressMess} = req.body
     const {name, message, phone} = req.body.form
+    let url = imageUrl ? imageUrl.split('/public')[1] : null
+    let urlSwiper = swiper ? swiper.split('/public')[1] : null
+    let logo = `/public${url}`
+    let _swiper = `/public${urlSwiper}`
+
 
     if (!userID || !imageUrl || !swiper || !addressMess || !message || !name || !phone) {
         resData.code = 2001
@@ -72,8 +173,8 @@ router.post('/editBusinessMessage', (req, res, next) => {
     Business.update({
         _id: userID
     }, {
-        logo: imageUrl,
-        swiper,
+        logo,
+        swiper: _swiper,
         phone,
         business: name,
         content: message,

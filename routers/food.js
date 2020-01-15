@@ -32,6 +32,9 @@ router.post('/findAllFood', (req, res, next) => {
                 res.json(resData)
                 return
             }
+           foodData && foodData.forEach(item=>{
+               item['imageUrl'] = host + item.imageUrl
+           })
             Food.countDocuments({
                 business
             }).then(count => {
@@ -55,6 +58,8 @@ router.post('/editFood', (req, res, next) => {
 
     const {imageUrl} = req.body
     const {name, description, price, _id} = req.body.form
+    let url = imageUrl ? imageUrl.split('/public')[1] : null
+    let foodUrl = `/public${url}`
 
     if (!name || !description || !imageUrl || !price) {
         resData.code = 2001
@@ -67,7 +72,7 @@ router.post('/editFood', (req, res, next) => {
     }, {
         name,
         description,
-        imageUrl,
+        imageUrl:foodUrl,
         price
     }).then(updateSuccess => {
         if (!updateSuccess) {
@@ -108,6 +113,8 @@ router.post('/addFood', function (req, res, next) {
 
     const {imageUrl, business} = req.body
     const {name, description, price} = req.body.form
+    let url = imageUrl ? imageUrl.split('/public')[1] : null
+    let foodUrl = `/public${url}`
 
     if (!name || !description || !price || !imageUrl) {
         resData.code = 2001
@@ -128,7 +135,7 @@ router.post('/addFood', function (req, res, next) {
         name,
         description,
         price,
-        imageUrl
+        imageUrl:foodUrl
     }).save().then(isSaveSuccess => {
 
         if (!isSaveSuccess) {

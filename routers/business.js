@@ -11,7 +11,7 @@ const resData = {}
 //搜素商家
 router.post('/searchBusiness', (req, res, next) => {
 
-    const {pageSize, pageNo, key} = req.body
+    const {pageSize, pageNo, key, cityKey} = req.body
 
     if (!pageSize || !pageNo) {
         resData.code = 2001
@@ -24,7 +24,7 @@ router.post('/searchBusiness', (req, res, next) => {
 
     //降序排序sort  模糊查询
     Business.find({
-        $or: [{'business': {'$regex': key, $options: '$i'}}]
+        $or : [{'business': {'$regex': key.toString(), $options: '$i'}}]
     }).sort({_id: -1}).limit(pageSize).skip(skip).then(data => {
         if (!data) {
             resData.code = 2001
@@ -32,15 +32,21 @@ router.post('/searchBusiness', (req, res, next) => {
             res.json(resData)
             return
         }
-        data && data.forEach(item=>{
-            item['logo'] = host + item.logo
-            item['swiper'] = host + item.swiper
+
+        let arr = []
+        data && data.forEach(item => {
+           if(item.address && item.address.includes(cityKey)){
+               item['logo'] = host + item.logo
+               item['swiper'] = host + item.swiper
+               arr.push(item)
+           }
         })
+
         Business.countDocuments().then(count => {
             let total = count
             resData.code = 2000
             resData.message = '查询成功'
-            resData.data = data
+            resData.data = arr
             resData.total = total
             res.json(resData)
         })
@@ -51,7 +57,7 @@ router.post('/searchBusiness', (req, res, next) => {
 //查询所有商家
 router.post('/findAllBusiness', (req, res, next) => {
 
-    const {pageSize, pageNo, type} = req.body
+    const {pageSize, pageNo, type,cityKey} = req.body
 
     if (!pageSize || !pageNo) {
         resData.code = 2001
@@ -64,14 +70,16 @@ router.post('/findAllBusiness', (req, res, next) => {
 
     //降序排序sort
     if (type == 1) {
-        Business.find().sort({_id: -1}).limit(pageSize).skip(skip).then(data => {
+        Business.find({
+            $or: [{'address': {$regex: cityKey, $options: '$i'}}]
+        }).sort({_id: -1}).limit(pageSize).skip(skip).then(data => {
             if (!data) {
                 resData.code = 2001
                 resData.message = '服务器出小差了，请稍后重试~~~'
                 res.json(resData)
                 return
             }
-            data && data.forEach(item=>{
+            data && data.forEach(item => {
                 item['logo'] = host + item.logo
                 item['swiper'] = host + item.swiper
             })
@@ -87,14 +95,16 @@ router.post('/findAllBusiness', (req, res, next) => {
     }
     //销量降序排序
     if (type == 2) {
-        Business.find().sort({saleNumber: -1}).limit(pageSize).skip(skip).then(data => {
+        Business.find({
+            $or: [{'address': {$regex: cityKey, $options: '$i'}}]
+        }).sort({saleNumber: -1}).limit(pageSize).skip(skip).then(data => {
             if (!data) {
                 resData.code = 2001
                 resData.message = '服务器出小差了，请稍后重试~~~'
                 res.json(resData)
                 return
             }
-            data && data.forEach(item=>{
+            data && data.forEach(item => {
                 item['logo'] = host + item.logo
                 item['swiper'] = host + item.swiper
             })
@@ -110,14 +120,16 @@ router.post('/findAllBusiness', (req, res, next) => {
     }
     //好评优先降序排序
     if (type == 3) {
-        Business.find().sort({score: -1}).limit(pageSize).skip(skip).then(data => {
+        Business.find({
+            $or: [{'address': {$regex: cityKey, $options: '$i'}}]
+        }).sort({score: -1}).limit(pageSize).skip(skip).then(data => {
             if (!data) {
                 resData.code = 2001
                 resData.message = '服务器出小差了，请稍后重试~~~'
                 res.json(resData)
                 return
             }
-            data && data.forEach(item=>{
+            data && data.forEach(item => {
                 item['logo'] = host + item.logo
                 item['swiper'] = host + item.swiper
             })
@@ -142,7 +154,7 @@ router.post('/getBusinessMessage', (req, res, next) => {
     Business.findOne({
         _id: userID,
     }).then(userInfo => {
-        if(userInfo){
+        if (userInfo) {
             userInfo['logo'] = host + userInfo.logo
             userInfo['swiper'] = host + userInfo.swiper
         }

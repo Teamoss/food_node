@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const Collection = require('../models/Collection')
 const util = require('../plugin/dateFormat')
+const host = require('../config/host')
 
 
 //定义统一返回格式
@@ -17,6 +18,8 @@ router.post('/findAllCollection', (req, res, next) => {
     //降序排序sort
     Collection.find({
         openid
+    }).populate({
+        path: 'business'
     }).sort({_id: -1}).limit(pageSize).skip(skip).then(data => {
         if (!data) {
             resData.code = 2001
@@ -24,6 +27,12 @@ router.post('/findAllCollection', (req, res, next) => {
             res.json(resData)
             return
         }
+
+        data && data.length > 0 && data.forEach((item, index) => {
+            item.business['logo'] = host + item.business.logo
+            item.business['swiper'] = host + item.business.swiper
+        })
+
         Collection.countDocuments({
             openid
         }).then(count => {

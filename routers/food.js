@@ -32,9 +32,9 @@ router.post('/findAllFood', (req, res, next) => {
                 res.json(resData)
                 return
             }
-           foodData && foodData.forEach(item=>{
-               item['imageUrl'] = host + item.imageUrl
-           })
+            foodData && foodData.forEach(item => {
+                item['imageUrl'] = host + item.imageUrl
+            })
             Food.countDocuments({
                 business
             }).then(count => {
@@ -72,7 +72,7 @@ router.post('/editFood', (req, res, next) => {
     }, {
         name,
         description,
-        imageUrl:foodUrl,
+        imageUrl: foodUrl,
         price
     }).then(updateSuccess => {
         if (!updateSuccess) {
@@ -135,7 +135,7 @@ router.post('/addFood', function (req, res, next) {
         name,
         description,
         price,
-        imageUrl:foodUrl
+        imageUrl: foodUrl
     }).save().then(isSaveSuccess => {
 
         if (!isSaveSuccess) {

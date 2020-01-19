@@ -11,7 +11,7 @@ module.exports = new mongoose.Schema({
     //店铺logo
     logo: {
         type: String,
-        default: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIAtibsicGaUUAGpGr8yo5G7MibcxgUPUreak1h1MAlp2quibB9qXxuruTdVnepiavDz8Tu9OIruLHMb7A/132'
+        default:'/public/default/logo.jpg'
     },
     //商家名称
     business: String,
@@ -19,7 +19,13 @@ module.exports = new mongoose.Schema({
     //商家介绍
     content: String,
 
-    //商家地址
+    //商家地区
+    city: {
+        type: Array,
+        default: ["广东省", "广州市", "天河区"]
+    },
+
+    //商家详细地址
     address: String,
 
     //联系方式
@@ -46,7 +52,7 @@ module.exports = new mongoose.Schema({
     //门店图片
     swiper: {
         type: String,
-        default: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIAtibsicGaUUAGpGr8yo5G7MibcxgUPUreak1h1MAlp2quibB9qXxuruTdVnepiavDz8Tu9OIruLHMb7A/132'
+        default: '/public/default/swiper.jpg'
     },
 
 })

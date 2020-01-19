@@ -28,9 +28,16 @@ router.post('/findAllCollection', (req, res, next) => {
             return
         }
 
+        console.log(data)
+
         data && data.length > 0 && data.forEach((item, index) => {
+            let addr = ''
             item.business['logo'] = host + item.business.logo
             item.business['swiper'] = host + item.business.swiper
+            item.business.city.forEach(item=>{
+                addr+=item
+            })
+            item.business.address = item.business.address ? addr + item.business.address : addr
         })
 
         Collection.countDocuments({

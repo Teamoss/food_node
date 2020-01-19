@@ -22,7 +22,7 @@ module.exports = new mongoose.Schema({
     //菜品图片
     imageUrl:{
         type:String,
-        default: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIAtibsicGaUUAGpGr8yo5G7MibcxgUPUreak1h1MAlp2quibB9qXxuruTdVnepiavDz8Tu9OIruLHMb7A/132'
+        default: '/public/default/food.jpeg'
     },
 })
 

@@ -11,21 +11,13 @@ const resData = {}
 //搜素商家
 router.post('/searchBusiness', (req, res, next) => {
 
-    const {pageSize, pageNo, key, cityKey} = req.body
-
-    if (!pageSize || !pageNo) {
-        resData.code = 2001
-        resData.message = '服务器出小差了，请稍后重试~~~'
-        res.json(resData)
-        return
-    }
-    //越过数据库条数
-    let skip = (pageNo - 1) * pageSize
+    //key为搜素key cityKey为城市定位key
+    const {key, cityKey} = req.body
 
     //降序排序sort  模糊查询
     Business.find({
-        $or : [{'business': {'$regex': key.toString(), $options: '$i'}}]
-    }).sort({_id: -1}).limit(pageSize).skip(skip).then(data => {
+        $or: [{'business': {'$regex': key.toString(), $options: '$i'}}]
+    }).sort({_id: -1}).then(data => {
         if (!data) {
             resData.code = 2001
             resData.message = '服务器出小差了，请稍后重试~~~'
@@ -35,21 +27,24 @@ router.post('/searchBusiness', (req, res, next) => {
 
         let arr = []
         data && data.forEach(item => {
-           if(item.address && item.address.includes(cityKey)){
-               item['logo'] = host + item.logo
-               item['swiper'] = host + item.swiper
-               arr.push(item)
-           }
+            if (item.city && item.city.includes(cityKey)) {
+                let addr = ''
+                item['logo'] = host + item.logo
+                item['swiper'] = host + item.swiper
+                item.city.forEach(item => {
+                    addr += item
+                })
+                item['address'] = item.address ? addr + item.address : addr
+                arr.push(item)
+            }
         })
 
-        Business.countDocuments().then(count => {
-            let total = count
-            resData.code = 2000
-            resData.message = '查询成功'
-            resData.data = arr
-            resData.total = total
-            res.json(resData)
-        })
+        resData.code = 2000
+        resData.message = '查询成功'
+        resData.data = arr
+        resData.total = arr.length
+        res.json(resData)
+        
     })
 
 })
@@ -57,7 +52,7 @@ router.post('/searchBusiness', (req, res, next) => {
 //查询所有商家
 router.post('/findAllBusiness', (req, res, next) => {
 
-    const {pageSize, pageNo, type,cityKey} = req.body
+    const {pageSize, pageNo, type, cityKey} = req.body
 
     if (!pageSize || !pageNo) {
         resData.code = 2001
@@ -72,7 +67,7 @@ router.post('/findAllBusiness', (req, res, next) => {
     if (type == 1) {
         Business.find({
             $or: [{'city': {$regex: cityKey, $options: '$i'}}]
-        },{username:0,password:0}).sort({_id: -1}).limit(pageSize).skip(skip).then(data => {
+        }, {username: 0, password: 0}).sort({_id: -1}).limit(pageSize).skip(skip).then(data => {
             if (!data) {
                 resData.code = 2001
                 resData.message = '服务器出小差了，请稍后重试~~~'
@@ -83,8 +78,8 @@ router.post('/findAllBusiness', (req, res, next) => {
                 let addr = ''
                 item['logo'] = host + item.logo
                 item['swiper'] = host + item.swiper
-                item.city.forEach(item=>{
-                    addr+=item
+                item.city.forEach(item => {
+                    addr += item
                 })
                 item.address = item.address ? addr + item.address : addr
             })
@@ -103,7 +98,7 @@ router.post('/findAllBusiness', (req, res, next) => {
     if (type == 2) {
         Business.find({
             $or: [{'city': {$regex: cityKey, $options: '$i'}}]
-        },{username:0,password:0}).sort({saleNumber: -1}).limit(pageSize).skip(skip).then(data => {
+        }, {username: 0, password: 0}).sort({saleNumber: -1}).limit(pageSize).skip(skip).then(data => {
             if (!data) {
                 resData.code = 2001
                 resData.message = '服务器出小差了，请稍后重试~~~'
@@ -114,8 +109,8 @@ router.post('/findAllBusiness', (req, res, next) => {
                 let addr = ''
                 item['logo'] = host + item.logo
                 item['swiper'] = host + item.swiper
-                item.city.forEach(item=>{
-                    addr+=item
+                item.city.forEach(item => {
+                    addr += item
                 })
                 item.address = item.address ? addr + item.address : addr
             })
@@ -133,7 +128,7 @@ router.post('/findAllBusiness', (req, res, next) => {
     if (type == 3) {
         Business.find({
             $or: [{'city': {$regex: cityKey, $options: '$i'}}]
-        },{username:0,password:0}).sort({score: -1}).limit(pageSize).skip(skip).then(data => {
+        }, {username: 0, password: 0}).sort({score: -1}).limit(pageSize).skip(skip).then(data => {
             if (!data) {
                 resData.code = 2001
                 resData.message = '服务器出小差了，请稍后重试~~~'
@@ -144,8 +139,8 @@ router.post('/findAllBusiness', (req, res, next) => {
                 let addr = ''
                 item['logo'] = host + item.logo
                 item['swiper'] = host + item.swiper
-                item.city.forEach(item=>{
-                    addr+=item
+                item.city.forEach(item => {
+                    addr += item
                 })
                 item.address = item.address ? addr + item.address : addr
             })
@@ -169,7 +164,7 @@ router.post('/getBusinessMessage', (req, res, next) => {
     const {userID} = req.body
     Business.findOne({
         _id: userID,
-    },{username:0,password:0}).then(userInfo => {
+    }, {username: 0, password: 0}).then(userInfo => {
         if (userInfo) {
             userInfo['logo'] = host + userInfo.logo
             userInfo['swiper'] = host + userInfo.swiper
@@ -185,8 +180,8 @@ router.post('/getBusinessMessage', (req, res, next) => {
 //编辑商家信息
 router.post('/editBusinessMessage', (req, res, next) => {
 
-    const {userID, imageUrl, swiper,city} = req.body
-    const {name, message, phone,address} = req.body.form
+    const {userID, imageUrl, swiper, city} = req.body
+    const {name, message, phone, address} = req.body.form
     let url = imageUrl ? imageUrl.split('/public')[1] : null
     let urlSwiper = swiper ? swiper.split('/public')[1] : null
     let logo = `/public${url}`

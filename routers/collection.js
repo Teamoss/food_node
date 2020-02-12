@@ -37,7 +37,7 @@ router.post('/findAllCollection', (req, res, next) => {
             item.business.city.forEach(item=>{
                 addr+=item
             })
-            item.business.address = item.business.address ? addr + item.business.address : addr
+            item.business['address'] = item.business.address ? addr + item.business.address : addr
         })
 
         Collection.countDocuments({

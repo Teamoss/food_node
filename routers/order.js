@@ -109,7 +109,7 @@ router.post('/findAllOrder', (req, res, next) => {
                 return
             }
             orderData && orderData.forEach((item, index) => {
-                if (index === 0) {
+                if ( !item.business['logo'].includes(host)) {
                     item.business['logo'] = host + item.business.logo
                     item.business['swiper'] = host + item.business.swiper
                 }

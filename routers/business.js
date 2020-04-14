@@ -83,7 +83,6 @@ router.post('/findAllBusiness', (req, res, next) => {
                 })
                 item.address = item.address ? addr + item.address : addr
             })
-            console.log(data)
             Business.countDocuments().then(count => {
                 let total = count
                 resData.code = 2000
@@ -95,7 +94,7 @@ router.post('/findAllBusiness', (req, res, next) => {
         })
     }
     //销量降序排序
-    if (type == 2) {
+    if (type == 3) {
         Business.find({
             $or: [{'city': {$regex: cityKey, $options: '$i'}}]
         }, {username: 0, password: 0}).sort({saleNumber: -1}).limit(pageSize).skip(skip).then(data => {
@@ -125,7 +124,7 @@ router.post('/findAllBusiness', (req, res, next) => {
         })
     }
     //好评优先降序排序
-    if (type == 3) {
+    if (type == 2) {
         Business.find({
             $or: [{'city': {$regex: cityKey, $options: '$i'}}]
         }, {username: 0, password: 0}).sort({score: -1}).limit(pageSize).skip(skip).then(data => {
@@ -169,7 +168,6 @@ router.post('/getBusinessMessage', (req, res, next) => {
             userInfo['logo'] = host + userInfo.logo
             userInfo['swiper'] = host + userInfo.swiper
         }
-        console.log(userInfo)
         resData.code = 2000
         resData.message = '登录成功'
         resData.userInfo = userInfo
